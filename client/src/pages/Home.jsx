@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { ArrowRight, BookOpen, Zap, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Zap, Users, Calendar, Clock3, MapPin, Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -14,6 +15,8 @@ import ScrollReveal from "@/components/ScrollReveal";
  * - Professional, clean layout with teal accents
  */
 export default function Home() {
+  const [featuredPrograms, setFeaturedPrograms] = useState([]);
+
   const services = [
     {
       icon: "https://d2xsxph8kpxj0f.cloudfront.net/310519663423259711/4MdUcbSqby5GLfYivgSoHu/services-icon-learning-2xMeMbGDWAgyd4RsYfkHi3.webp",
@@ -39,24 +42,25 @@ export default function Home() {
     { icon: ArrowRight, text: "Customized corporate solutions" },
   ];
 
-  const seminars = [
-    {
-      title: "Leadership for the Digital Age",
-      description: "Develop leadership skills in a rapidly changing digital landscape.",
-    },
-    {
-      title: "Workplace Productivity Training",
-      description: "Enhance team efficiency and individual productivity with proven strategies.",
-    },
-    {
-      title: "Effective Team Management",
-      description: "Master the art of leading and managing high-performing teams.",
-    },
-    {
-      title: "Modern Learning Technologies",
-      description: "Explore cutting-edge technologies transforming corporate training.",
-    },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("/api/events");
+        if (!res.ok) {
+          throw new Error("Failed to fetch events");
+        }
+
+        const data = await res.json();
+        const rows = Array.isArray(data) ? data : [];
+        setFeaturedPrograms(rows.filter((event) => event.type === "featured"));
+      } catch (error) {
+        console.error("Failed to fetch featured programs", error);
+        setFeaturedPrograms([]);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -169,32 +173,62 @@ export default function Home() {
       </section>
 
       {/* Featured Seminars */}
-      <section className="py-20 md:py-32 bg-gray-50">
+      <section className="relative py-20 md:py-32 bg-slate-50 overflow-hidden">
+        <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-[#25badf]/15 blur-3xl" />
+        <div className="absolute -bottom-16 left-10 h-64 w-64 rounded-full bg-[#1b2e45]/8 blur-3xl" />
         <div className="container mx-auto px-4">
-          <ScrollReveal as="div" variant="fade-up" className="text-center mb-16">
+          <ScrollReveal as="div" variant="fade-up" className="relative z-10 text-center mb-16">
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#25badf]/25 bg-white px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-[#1b2e45]">
+              <Sparkles size={14} className="text-[#25badf]" />
+              Signature Programs
+            </p>
             <h2 className="heading-lg mb-4">Featured Programs</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Explore our most popular seminars and training programs.
             </p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {seminars.map((seminar, idx) => (
-              <ScrollReveal
-                key={idx}
-                as="div"
-                variant="pop"
-                delay={idx * 80}
-                className="card-hover bg-white p-8 rounded-lg border border-gray-200"
-              >
-                <h3 className="heading-sm mb-3 text-[#1b2e45]">{seminar.title}</h3>
-                <p className="text-gray-600 mb-6">{seminar.description}</p>
-                <span className="text-[#25badf] font-semibold hover:underline inline-flex items-center gap-2">
-                  Learn More <ArrowRight size={18} />
-                </span>
-              </ScrollReveal>
-            ))}
-          </div>
+          {featuredPrograms.length > 0 ? (
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {featuredPrograms.map((program, idx) => (
+                <ScrollReveal
+                  key={program.id ?? idx}
+                  as="div"
+                  variant="pop"
+                  delay={idx * 80}
+                  className="card-hover rounded-2xl border border-slate-200 bg-white shadow-sm"
+                >
+                  <div className="p-7">
+                    <h3 className="heading-sm mb-3 text-[#1b2e45]">{program.title}</h3>
+                    <p className="text-slate-600 mb-5 leading-relaxed">{program.description || "No description provided yet."}</p>
+                    <div className="space-y-2 text-sm text-slate-600 mb-6">
+                      <p className="inline-flex items-center gap-2">
+                        <Calendar size={15} className="text-[#25badf]" />
+                        {program.date || "Date TBD"}
+                      </p>
+                      <p className="inline-flex items-center gap-2">
+                        <Clock3 size={15} className="text-[#25badf]" />
+                        {program.time || "Time TBD"}
+                      </p>
+                      <p className="inline-flex items-center gap-2">
+                        <MapPin size={15} className="text-[#25badf]" />
+                        {program.location || "Location TBD"}
+                      </p>
+                    </div>
+                    <Link href="/seminars">
+                      <span className="text-[#25badf] font-semibold hover:underline inline-flex items-center gap-2">
+                        Learn More <ArrowRight size={18} />
+                      </span>
+                    </Link>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          ) : (
+            <div className="relative z-10 mb-12 rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600">
+              No featured programs yet. Add events with type <span className="font-semibold">Featured Program</span> in the admin dashboard.
+            </div>
+          )}
 
           <ScrollReveal as="div" variant="fade-up" className="text-center">
             <Link href="/seminars">

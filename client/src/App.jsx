@@ -10,6 +10,13 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import Seminars from "./pages/Seminars";
 import Contact from "./pages/Contact";
+import Admin from "./pages/Admin";
+
+function ProtectedAdmin() {
+  const token = localStorage.getItem("adminToken");
+  if (!token) return <NotFound />;
+  return <Admin />;
+}
 
 function Router() {
   const [location] = useLocation();
@@ -26,6 +33,8 @@ function Router() {
         <Route path={"/services"} component={Services} />
         <Route path={"/seminars"} component={Seminars} />
         <Route path={"/contact"} component={Contact} />
+        <Route path={"/admin"} component={ProtectedAdmin} />
+        <Route path={"/admin-login"} component={Admin} />
         <Route path={"/404"} component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />

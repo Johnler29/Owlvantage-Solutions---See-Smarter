@@ -95,7 +95,9 @@ export default function Footer() {
                 <Linkedin size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/owlvantagesolutions"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-300 hover:text-[#25badf] transition-colors"
                 aria-label="Facebook"
               >

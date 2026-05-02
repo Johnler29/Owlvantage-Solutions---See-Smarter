@@ -1,26 +1,7 @@
 import { useRef } from "react";
 import { usePersistFn } from "./usePersistFn";
 
-export interface UseCompositionReturn<
-  T extends HTMLInputElement | HTMLTextAreaElement,
-> {
-  onCompositionStart>;
-  onCompositionEnd>;
-  onKeyDown>;
-  isComposing: () => boolean;
-}
-
-export interface UseCompositionOptions<
-  T extends HTMLInputElement | HTMLTextAreaElement,
-> {
-  onKeyDown?>;
-  onCompositionStart?>;
-  onCompositionEnd?>;
-} = ReturnType<typeof setTimeout>;
-
-export function useComposition<
-  T extends HTMLInputElement | HTMLTextAreaElement = HTMLInputElement,
->(options= {}): UseCompositionReturn<T> {
+export function useComposition(options = {}) {
   const {
     onKeyDown: originalOnKeyDown,
     onCompositionStart: originalOnCompositionStart,
@@ -28,8 +9,8 @@ export function useComposition<
   } = options;
 
   const c = useRef(false);
-  const timer = useRef<TimerResponse | null>(null);
-  const timer2 = useRef<TimerResponse | null>(null);
+  const timer = useRef(null);
+  const timer2 = useRef(null);
 
   const onCompositionStart = usePersistFn((e) => {
     if (timer.current) {

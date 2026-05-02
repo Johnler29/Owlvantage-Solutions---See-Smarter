@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Building2, MessageSquare, User, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
@@ -40,11 +40,31 @@ export default function Contact() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "An error occurred. Please try again.";
+        try {
+          const data = await res.json();
+          if (data?.error) errorMessage = data.error;
+        } catch {
+          // ignore
+        }
+        throw new Error(errorMessage);
+      }
 
       toast.success("Thank you for your message! We'll be in touch soon.");
       setFormData({
@@ -55,7 +75,7 @@ export default function Contact() {
         message: "",
       });
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error(error?.message || "An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -67,33 +87,41 @@ export default function Contact() {
 
       <main className="animate-in fade-in-20 slide-in-from-bottom-4 duration-500">
         {/* Hero Section */}
-        <section className="py-20 md:py-32 bg-gradient-to-br from-[#25badf]/5 to-[#1b2e45]/5">
-        <div className="container mx-auto px-4">
-          <ScrollReveal as="div" variant="pop" className="max-w-3xl">
-            <h1 className="heading-xl mb-6">Get in Touch</h1>
-            <p className="text-xl text-gray-700 leading-relaxed">
-              Have questions or ready to discuss your learning and development needs? We'd love to hear from you.
-            </p>
-          </ScrollReveal>
-        </div>
+        <section className="relative overflow-hidden py-20 md:py-32 bg-gradient-to-br from-[#25badf]/10 to-[#1b2e45]/10">
+          <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-[#25badf]/20 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-60 w-60 rounded-full bg-[#1b2e45]/10 blur-3xl" />
+
+          <div className="container mx-auto px-4 relative z-10">
+            <ScrollReveal as="div" variant="pop" className="max-w-3xl">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#25badf]/30 bg-white/80 px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-[#1b2e45]">
+                <Sparkles size={14} className="text-[#25badf]" />
+                Let&apos;s Start a Conversation
+              </p>
+              <h1 className="heading-xl mb-6">Get in Touch</h1>
+              <p className="text-xl text-gray-700 leading-relaxed">
+                Have questions or ready to discuss your learning and development needs? We&apos;d love to hear from you.
+              </p>
+            </ScrollReveal>
+          </div>
         </section>
 
         {/* Contact Section */}
-        <section className="py-20 md:py-32 bg-white">
+        <section className="relative py-20 md:py-32 bg-slate-50 overflow-hidden">
+        <div className="absolute inset-0 opacity-50 [background-image:radial-gradient(#25badf_1px,transparent_1px)] [background-size:22px_22px]" />
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 items-start">
             {/* Contact Information */}
             <div className="lg:col-span-1">
               <div className="space-y-8">
                 {/* Email */}
-                <ScrollReveal as="div" variant="pop" className="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200">
+                <ScrollReveal as="div" variant="pop" className="card-hover bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
                   <div className="flex items-start gap-4">
                     <Mail className="w-8 h-8 text-[#25badf] flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-[#1b2e45] mb-2">Email</h3>
+                      <h3 className="text-xl font-bold text-[#1b2e45] mb-2">Email</h3>
                       <a
                         href="mailto:info@owlvantage.com"
-                        className="text-gray-600 hover:text-[#25badf] transition-colors"
+                        className="text-slate-600 hover:text-[#25badf] transition-colors"
                       >
                         info@owlvantage.com
                       </a>
@@ -106,14 +134,18 @@ export default function Contact() {
                   as="div"
                   variant="pop"
                   delay={80}
-                  className="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200"
+                  className="card-hover bg-white p-8 rounded-2xl border border-gray-200 shadow-sm"
                 >
                   <div className="flex items-start gap-4">
                     <Phone className="w-8 h-8 text-[#25badf] flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-[#1b2e45] mb-2">Phone</h3>
-                      <p className="text-gray-600">Available during business hours</p>
-                      <p className="text-gray-600 text-sm mt-2">Contact us for phone number</p>
+                      <h3 className="text-xl font-bold text-[#1b2e45] mb-2">Phone</h3>
+                      <a
+                        href="tel:09567193823"
+                        className="text-slate-600 hover:text-[#25badf] transition-colors"
+                      >
+                        0956 719 3823
+                      </a>
                     </div>
                   </div>
                 </ScrollReveal>
@@ -123,14 +155,14 @@ export default function Contact() {
                   as="div"
                   variant="pop"
                   delay={160}
-                  className="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200"
+                  className="card-hover bg-white p-8 rounded-2xl border border-gray-200 shadow-sm"
                 >
                   <div className="flex items-start gap-4">
                     <MapPin className="w-8 h-8 text-[#25badf] flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-bold text-[#1b2e45] mb-2">Location</h3>
-                      <p className="text-gray-600">Serving clients globally</p>
-                      <p className="text-gray-600 text-sm mt-2">Virtual and in-person options available</p>
+                      <h3 className="text-xl font-bold text-[#1b2e45] mb-2">Location</h3>
+                      <p className="text-slate-600">Serving clients globally</p>
+                      <p className="text-slate-600 text-sm mt-2">Virtual and in-person options available</p>
                     </div>
                   </div>
                 </ScrollReveal>
@@ -140,9 +172,9 @@ export default function Contact() {
                   as="div"
                   variant="fade-up"
                   delay={220}
-                  className="bg-[#25badf]/10 p-8 rounded-lg border border-[#25badf]/20"
+                  className="bg-[#25badf]/10 p-8 rounded-2xl border border-[#25badf]/20"
                 >
-                  <h3 className="font-bold text-[#1b2e45] mb-4">Connect With Us</h3>
+                  <h3 className="text-xl font-bold text-[#1b2e45] mb-4">Connect With Us</h3>
                   <div className="space-y-3">
                     <a
                       href="#"
@@ -152,7 +184,9 @@ export default function Contact() {
                       LinkedIn
                     </a>
                     <a
-                      href="#"
+                      href="https://www.facebook.com/owlvantagesolutions"
+                      target="_blank"
+                      rel="noreferrer"
                       className="block text-[#25badf] hover:underline font-medium"
                       aria-label="Facebook"
                     >
@@ -173,12 +207,23 @@ export default function Contact() {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <ScrollReveal as="div" variant="fade-up">
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 md:p-10 shadow-xl shadow-slate-900/5">
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div>
+                    <h2 className="heading-sm mb-2">Send Us a Message</h2>
+                    <p className="text-slate-600">Tell us about your goals and we&apos;ll recommend the best next steps.</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#25badf]/10 px-3 py-1 text-xs font-semibold text-[#1b2e45]">
+                    <CheckCircle2 size={14} className="text-[#25badf]" />
+                    Typically replies within 24 hours
+                  </span>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-[#1b2e45] mb-2">
-                      Name *
+                    <label htmlFor="name" className="flex items-center gap-2 text-sm font-semibold text-[#1b2e45] mb-2">
+                      <User size={15} className="text-[#25badf]" /> Name *
                     </label>
                     <input
                       type="text"
@@ -194,8 +239,8 @@ export default function Contact() {
 
                   {/* Email */}
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-[#1b2e45] mb-2">
-                      Email *
+                    <label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-[#1b2e45] mb-2">
+                      <Mail size={15} className="text-[#25badf]" /> Email *
                     </label>
                     <input
                       type="email"
@@ -213,8 +258,8 @@ export default function Contact() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Phone */}
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-[#1b2e45] mb-2">
-                      Phone
+                    <label htmlFor="phone" className="flex items-center gap-2 text-sm font-semibold text-[#1b2e45] mb-2">
+                      <Phone size={15} className="text-[#25badf]" /> Phone
                     </label>
                     <input
                       type="tel"
@@ -229,8 +274,8 @@ export default function Contact() {
 
                   {/* Company */}
                   <div>
-                    <label htmlFor="company" className="block text-sm font-semibold text-[#1b2e45] mb-2">
-                      Company
+                    <label htmlFor="company" className="flex items-center gap-2 text-sm font-semibold text-[#1b2e45] mb-2">
+                      <Building2 size={15} className="text-[#25badf]" /> Company
                     </label>
                     <input
                       type="text"
@@ -246,8 +291,8 @@ export default function Contact() {
 
                 {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-[#1b2e45] mb-2">
-                    Message *
+                  <label htmlFor="message" className="flex items-center gap-2 text-sm font-semibold text-[#1b2e45] mb-2">
+                    <MessageSquare size={15} className="text-[#25badf]" /> Message *
                   </label>
                   <textarea
                     id="message"
@@ -265,12 +310,13 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
+                  {!isSubmitting && <ArrowRight size={16} />}
                 </button>
 
-                <p className="text-sm text-gray-600 text-center">
+                <p className="text-sm text-slate-600 text-center">
                   We'll get back to you as soon as possible. Thank you for reaching out!
                 </p>
                 </form>
@@ -287,6 +333,10 @@ export default function Contact() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Our team is ready to discuss your learning and development needs. Reach out via email or contact form above.
           </p>
+          <a href="tel:09567193823" className="btn-primary inline-flex items-center gap-2">
+            Talk to Our Team
+            <Phone size={16} />
+          </a>
         </ScrollReveal>
         </section>
       </main>

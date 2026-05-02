@@ -4,12 +4,7 @@ import { XIcon } from "lucide-react";
 import * as React from "react";
 
 // Context to track composition state across dialog children
-const DialogCompositionContext = React.createContext<{
-  isComposing: () => boolean;
-  setComposing: (composing: boolean) => void;
-  justEndedComposing: () => boolean;
-  markCompositionEnd: () => void;
-}>({
+const DialogCompositionContext = React.createContext({
   isComposing: () => false,
   setComposing: () => {},
   justEndedComposing: () => false,
@@ -21,15 +16,15 @@ export const useDialogComposition = () =>
 
 function Dialog({
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
+}) {
   const composingRef = React.useRef(false);
   const justEndedRef = React.useRef(false);
-  const endTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const endTimerRef = React.useRef(null);
 
   const contextValue = React.useMemo(
     () => ({
       isComposing: () => composingRef.current,
-      setComposing: (composing: boolean) => {
+      setComposing: (composing) => {
         composingRef.current = composing;
       },
       justEndedComposing: () => justEndedRef.current,
@@ -55,31 +50,31 @@ function Dialog({
 
 function DialogTrigger({
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
+}) {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 function DialogPortal({
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Portal>) {
+}) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 function DialogClose({
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+}) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 function DialogOverlay({
   className,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+}) {
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-black/50",
         className
       )}
       {...props}
@@ -95,16 +90,14 @@ function DialogContent({
   showCloseButton = true,
   onEscapeKeyDown,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  showCloseButton?;
 }) {
   const { isComposing } = useDialogComposition();
 
   const handleEscapeKeyDown = React.useCallback(
-    (e: KeyboardEvent) => {
+    (e) => {
       // Check both the native isComposing property and our context state
       // This handles Safari's timing issues with composition events
-      const isCurrentlyComposing = (e as any).isComposing || isComposing();
+      const isCurrentlyComposing = e?.isComposing || isComposing();
 
       // If IME is composing, prevent dialog from closing
       if (isCurrentlyComposing) {
@@ -145,7 +138,7 @@ function DialogContent({
   );
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+function DialogHeader({ className, ...props }) {
   return (
     <div
       data-slot="dialog-header"
@@ -155,7 +148,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+function DialogFooter({ className, ...props }) {
   return (
     <div
       data-slot="dialog-footer"
@@ -171,7 +164,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
 function DialogTitle({
   className,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Title>) {
+}) {
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
@@ -184,7 +177,7 @@ function DialogTitle({
 function DialogDescription({
   className,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Description>) {
+}) {
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"

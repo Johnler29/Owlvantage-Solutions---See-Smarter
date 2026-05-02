@@ -186,15 +186,15 @@
 
   /* Owlvantage Design System */
   .btn-primary {
-    @apply bg-[#25badf] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#1a8fb8] hover:shadow-lg;
+    @apply bg-[#25badf] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#1a8fb8] hover:shadow-xl hover:-translate-y-0.5;
   }
 
   .btn-secondary {
-    @apply bg-[#1b2e45] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#0f1a2e] hover:shadow-lg;
+    @apply bg-[#1b2e45] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#0f1a2e] hover:shadow-xl hover:-translate-y-0.5;
   }
 
   .btn-outline {
-    @apply border-2 border-[#25badf] text-[#25badf] px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#25badf] hover:text-white;
+    @apply border-2 border-[#25badf] text-[#25badf] px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#25badf] hover:text-white hover:-translate-y-0.5;
   }
 
   .heading-xl {
@@ -234,7 +234,7 @@
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 hover:border-[#25badf]/30;
   }
 }
 
