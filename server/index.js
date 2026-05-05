@@ -5,6 +5,9 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import { Resend } from "resend";
 import db from "./db.js";
+import cors from "cors";
+
+console.log("DB engine:", db.engine);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -80,6 +83,25 @@ async function startServer() {
 
   const app = express();
   const server = createServer(app);
+
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ].filter(Boolean);
+
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error("Not allowed by CORS"));
+      },
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
+  app.options("*", cors());
 
   app.use(express.json({ limit: "200kb" }));
 
