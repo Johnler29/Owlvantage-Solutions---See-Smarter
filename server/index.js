@@ -76,6 +76,8 @@ async function sendRegistrationStatusEmail({ to, approved, registrantName, semin
 }
 
 async function startServer() {
+  await db.ready;
+
   const app = express();
   const server = createServer(app);
 
@@ -372,7 +374,7 @@ async function startServer() {
         [name, email, phone || null, company || null, message || null, seminar_id],
         function (insertErr) {
           if (insertErr) {
-            if (insertErr.message?.includes("UNIQUE constraint failed")) {
+            if (insertErr.code === "23505" || insertErr.message?.includes("UNIQUE constraint failed")) {
               return res.status(409).json({ ok: false, error: "You are already registered for this seminar" });
             }
 
