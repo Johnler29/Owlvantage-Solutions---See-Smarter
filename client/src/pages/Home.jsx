@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, Zap, Users, Calendar, Clock3, MapPin, Sparkles } 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import { apiUrl } from "@/lib/api";
 
 /**
  * Home Page
@@ -45,7 +46,7 @@ export default function Home() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch("/api/events");
+        const res = await fetch(apiUrl("/api/events"));
         if (!res.ok) {
           throw new Error("Failed to fetch events");
         }

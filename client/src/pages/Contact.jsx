@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
+import { apiUrl } from "@/lib/api";
 
 /**
  * Contact Page
@@ -49,7 +50,7 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/inquiries", {
+      const res = await fetch(apiUrl("/api/inquiries"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

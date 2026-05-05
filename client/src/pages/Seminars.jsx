@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import { apiUrl } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -56,7 +57,7 @@ export default function Seminars() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch("/api/events");
+        const res = await fetch(apiUrl("/api/events"));
         if (!res.ok) {
           throw new Error("Failed to fetch events");
         }
@@ -134,7 +135,7 @@ export default function Seminars() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/register-seminar", {
+      const res = await fetch(apiUrl("/api/register-seminar"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

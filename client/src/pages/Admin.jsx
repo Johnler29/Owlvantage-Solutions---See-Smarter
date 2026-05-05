@@ -47,6 +47,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { apiUrl } from "@/lib/api";
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -107,7 +108,7 @@ export default function Admin() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch("/api/admin/seminar-registration-counts", {
+      const res = await fetch(apiUrl("/api/admin/seminar-registration-counts"), {
         headers: { ...getAdminHeaders() },
       });
       if (res.status === 401) {
@@ -123,7 +124,7 @@ export default function Admin() {
 
   const fetchRegistrations = async () => {
     try {
-      const res = await fetch("/api/admin/registrations", {
+      const res = await fetch(apiUrl("/api/admin/registrations"), {
         headers: { ...getAdminHeaders() },
       });
       if (res.status === 401) {
@@ -139,7 +140,7 @@ export default function Admin() {
 
   const fetchInquiries = async () => {
     try {
-      const res = await fetch("/api/admin/inquiries", {
+      const res = await fetch(apiUrl("/api/admin/inquiries"), {
         headers: { ...getAdminHeaders() },
       });
       if (res.status === 401) {
@@ -163,7 +164,7 @@ export default function Admin() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch(apiUrl("/api/admin/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -296,7 +297,7 @@ export default function Admin() {
       return;
     }
 
-    const url = "/api/events";
+    const url = apiUrl("/api/events");
     const method = "POST";
 
     setIsSubmitting(true);
@@ -368,7 +369,7 @@ export default function Admin() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/events/${editTarget.id}`, {
+      const res = await fetch(apiUrl(`/api/events/${editTarget.id}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json", ...getAdminHeaders() },
         body: JSON.stringify(editFormData),
@@ -402,7 +403,7 @@ export default function Admin() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/events/${id}`, { method: "DELETE", headers: { ...getAdminHeaders() } });
+      const res = await fetch(apiUrl(`/api/events/${id}`), { method: "DELETE", headers: { ...getAdminHeaders() } });
       if (res.status === 401) {
         handleUnauthorized();
         return;
@@ -416,7 +417,7 @@ export default function Admin() {
 
   const handleDeleteRegistration = async (id) => {
     try {
-      const res = await fetch(`/api/admin/registrations/${id}`, { method: "DELETE", headers: { ...getAdminHeaders() } });
+      const res = await fetch(apiUrl(`/api/admin/registrations/${id}`), { method: "DELETE", headers: { ...getAdminHeaders() } });
       if (res.status === 401) {
         handleUnauthorized();
         return;
@@ -1385,7 +1386,7 @@ export default function Admin() {
                     const nextApproved = !isRegistrationApproved(target);
                     setIsSubmitting(true);
                     try {
-                      const res = await fetch(`/api/admin/registrations/${target.id}/approval`, {
+                      const res = await fetch(apiUrl(`/api/admin/registrations/${target.id}/approval`), {
                         method: "POST",
                         headers: { "Content-Type": "application/json", ...getAdminHeaders() },
                         body: JSON.stringify({ approved: nextApproved }),
