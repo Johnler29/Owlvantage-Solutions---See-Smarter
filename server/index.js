@@ -84,24 +84,35 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
 
-  const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    "http://localhost:3000",
-    "http://localhost:5173",
-  ].filter(Boolean);
-
-  app.use(
-    cors({
-      origin(origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) return callback(null, true);
-        return callback(new Error("Not allowed by CORS"));
-      },
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-    })
+  const allowedOrigins = new Set(
+    [
+      process.env.FRONTEND_URL,
+      process.env.FRONTEND_URL_ALT,
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ].filter(Boolean)
   );
-  app.options("*", cors());
+
+  const isAllowedOrigin = (origin) => {
+    if (!origin) return true;
+    if (allowedOrigins.has(origin)) return true;
+    // Allow Vercel preview and production domains without needing redeploy per-branch.
+    if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) return true;
+    return false;
+  };
+
+  const corsOptions = {
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204,
+  };
+
+  app.use(cors(corsOptions));
+  app.options("*", cors(corsOptions));
 
   app.use(express.json({ limit: "200kb" }));
 
