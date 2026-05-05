@@ -10,6 +10,7 @@ import {
   Trash2,
   Pencil,
   LogOut,
+  ArrowLeft,
   Inbox,
   Plus,
   Eye,
@@ -474,7 +475,6 @@ export default function Admin() {
                 type: nextType,
                 date: "",
                 time: "",
-                location: "",
               });
             }}
             className={baseFieldClass}
@@ -549,18 +549,16 @@ export default function Admin() {
           </div>
         )}
 
-        {data.type === "upcoming" && (
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-slate-700">Location</label>
-            <input
-              type="text"
-              value={data.location}
-              onChange={(e) => setData({ ...data, location: e.target.value })}
-              className={baseFieldClass}
-              placeholder="Virtual / In-person / address"
-            />
-          </div>
-        )}
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-slate-700">Location</label>
+          <input
+            type="text"
+            value={data.location}
+            onChange={(e) => setData({ ...data, location: e.target.value })}
+            className={baseFieldClass}
+            placeholder="Virtual / In-person / address"
+          />
+        </div>
       </div>
     );
   };
@@ -1186,6 +1184,13 @@ export default function Admin() {
                 />
               </div>
             </div>
+
+            <a
+              href="/"
+              className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition duration-200 hover:bg-slate-50"
+            >
+              <ArrowLeft size={16} /> Back to website
+            </a>
 
             <button
               onClick={handleLogout}

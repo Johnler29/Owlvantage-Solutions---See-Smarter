@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { ArrowRight, BookOpen, Zap, Users, Calendar, Clock3, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Zap, Users, Calendar, Clock3, MapPin, Sparkles, GraduationCap } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -202,19 +202,38 @@ export default function Home() {
                   <div className="p-7">
                     <h3 className="heading-sm mb-3 text-[#1b2e45]">{program.title}</h3>
                     <p className="text-slate-600 mb-5 leading-relaxed">{program.description || "No description provided yet."}</p>
-                    <div className="space-y-2 text-sm text-slate-600 mb-6">
-                      <p className="inline-flex items-center gap-2">
-                        <Calendar size={15} className="text-[#25badf]" />
-                        {program.date || "Date TBD"}
-                      </p>
-                      <p className="inline-flex items-center gap-2">
-                        <Clock3 size={15} className="text-[#25badf]" />
-                        {program.time || "Time TBD"}
-                      </p>
-                      <p className="inline-flex items-center gap-2">
-                        <MapPin size={15} className="text-[#25badf]" />
-                        {program.location || "Location TBD"}
-                      </p>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600 mb-6">
+                      {program.type === "featured" ? (
+                        <>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <Clock3 size={15} className="shrink-0 text-[#25badf]" />
+                            {program.duration || "Duration TBD"}
+                          </span>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <GraduationCap size={15} className="shrink-0 text-[#25badf]" />
+                            {program.level || "Level TBD"}
+                          </span>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <MapPin size={15} className="shrink-0 text-[#25badf]" />
+                            {program.location || "Location TBD"}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <Calendar size={15} className="shrink-0 text-[#25badf]" />
+                            {program.date || "Date TBD"}
+                          </span>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <Clock3 size={15} className="shrink-0 text-[#25badf]" />
+                            {program.time || "Time TBD"}
+                          </span>
+                          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                            <MapPin size={15} className="shrink-0 text-[#25badf]" />
+                            {program.location || "Location TBD"}
+                          </span>
+                        </>
+                      )}
                     </div>
                     <Link href="/seminars">
                       <span className="text-[#25badf] font-semibold hover:underline inline-flex items-center gap-2">

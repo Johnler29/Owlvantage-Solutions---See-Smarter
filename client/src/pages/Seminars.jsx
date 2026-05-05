@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Calendar, Users, Award, Network, Clock3, ArrowRight, Sparkles } from "lucide-react";
+import { Calendar, Users, Award, Network, Clock3, ArrowRight, Sparkles, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -223,14 +223,18 @@ export default function Seminars() {
                       {program.description || "No description provided yet."}
                     </p>
 
-                    <div className="flex flex-wrap gap-3 text-sm">
-                      <span className="inline-flex items-center gap-1.5 bg-[#25badf]/10 text-[#25badf] px-3 py-1.5 rounded-full font-semibold">
-                        <Clock3 size={14} />
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
+                        <Clock3 size={14} className="shrink-0" />
                         {program.duration || "Duration TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full font-semibold">
-                        <Sparkles size={14} />
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-slate-100 text-slate-700 px-3.5 py-1.5 rounded-full font-semibold">
+                        <Sparkles size={14} className="shrink-0" />
                         {program.level || "Level TBD"}
+                      </span>
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-slate-100 text-slate-700 px-3.5 py-1.5 rounded-full font-semibold">
+                        <MapPin size={14} className="shrink-0" />
+                        {program.location || "Location TBD"}
                       </span>
                     </div>
 
