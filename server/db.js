@@ -1,4 +1,3 @@
-import sqlite3 from "sqlite3";
 import { Pool } from "pg";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -200,6 +199,8 @@ if (isPostgres) {
     },
   };
 } else {
+  const sqlite3Module = await import("sqlite3");
+  const sqlite3 = sqlite3Module.default;
   const dbPath = path.resolve(__dirname, "..", "database.sqlite");
   const sqliteDb = new sqlite3.Database(dbPath);
   initSqlite(sqliteDb);
