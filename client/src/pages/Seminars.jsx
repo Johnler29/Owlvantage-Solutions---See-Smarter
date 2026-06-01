@@ -195,9 +195,15 @@ export default function Seminars() {
         </section>
 
         {/* Featured Programs */}
-        <section className="py-20 md:py-32 bg-slate-50">
-        <div className="container mx-auto px-4">
+        <section className="py-20 md:py-32 bg-gradient-to-br from-[#1b2e45]/5 via-white to-[#0f1a2e]/5 relative overflow-hidden">
+          <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-[#1b2e45]/10 blur-3xl" />
+          <div className="absolute -bottom-16 left-10 h-64 w-64 rounded-full bg-[#0f1a2e]/10 blur-3xl" />
+        <div className="container mx-auto px-4 relative z-10">
           <ScrollReveal as="div" variant="fade-up" className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#1b2e45]/10 text-[#1b2e45] px-4 py-1.5 text-sm font-semibold uppercase tracking-widest mb-4">
+              <Sparkles size={14} />
+              Featured
+            </span>
             <h2 className="heading-lg mb-4">Featured Programs</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Our most popular seminars and training programs designed for professional development.
@@ -212,11 +218,15 @@ export default function Seminars() {
                   as="div"
                   variant="pop"
                   delay={idx * 80}
-                  className="card-hover rounded-2xl border border-slate-200 bg-white shadow-sm"
+                  className="card-hover rounded-2xl border-2 border-[#1b2e45]/20 bg-white shadow-sm hover:border-[#1b2e45]/40"
                 >
                   <div className="p-7">
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <h3 className="text-2xl font-bold text-[#1b2e45] leading-tight">{program.title}</h3>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1b2e45]/10 text-[#1b2e45] px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
+                        <Sparkles size={12} />
+                        Featured
+                      </span>
                     </div>
 
                     <p className="text-slate-600 mb-6 leading-relaxed">
@@ -228,11 +238,11 @@ export default function Seminars() {
                         <Clock3 size={14} className="shrink-0" />
                         {program.duration || "Duration TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-slate-100 text-slate-700 px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#1b2e45]/10 text-[#1b2e45] px-3.5 py-1.5 rounded-full font-semibold">
                         <Sparkles size={14} className="shrink-0" />
                         {program.level || "Level TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-slate-100 text-slate-700 px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
                         <MapPin size={14} className="shrink-0" />
                         {program.location || "Location TBD"}
                       </span>
@@ -253,17 +263,23 @@ export default function Seminars() {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
-              No featured programs yet. Add events with type <span className="font-semibold">Featured Program</span> in the admin dashboard.
+            <div className="rounded-lg border-2 border-dashed border-[#1b2e45]/30 bg-[#1b2e45]/5 p-8 text-center text-slate-600">
+              No featured programs yet. Add events with type <span className="font-semibold text-[#1b2e45]">Featured Program</span> in the admin dashboard.
             </div>
           )}
         </div>
         </section>
 
         {/* Upcoming Seminars */}
-        <section className="py-20 md:py-32 bg-white">
-        <div className="container mx-auto px-4">
+        <section className="py-20 md:py-32 bg-gradient-to-br from-[#25badf]/5 via-white to-[#0fa3c1]/5 relative overflow-hidden">
+          <div className="absolute top-10 right-10 h-40 w-40 rounded-full bg-[#25badf]/10 blur-3xl" />
+          <div className="absolute bottom-10 left-10 h-32 w-32 rounded-full bg-[#0fa3c1]/10 blur-3xl" />
+        <div className="container mx-auto px-4 relative z-10">
           <ScrollReveal as="div" variant="fade-up" className="text-center mb-14">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#25badf]/10 text-[#25badf] px-4 py-1.5 text-sm font-semibold uppercase tracking-widest mb-4">
+              <Sparkles size={14} />
+              Coming Soon
+            </span>
             <h2 className="heading-lg mb-4">Upcoming Seminars</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Register for our upcoming seminars and start your learning journey today.
@@ -278,12 +294,10 @@ export default function Seminars() {
                   as="div"
                   variant="pop"
                   delay={idx * 70}
-                  className={`card-hover bg-white p-8 rounded-lg border transition-all ${
-                    selectedSeminarId === seminar.id ? "border-[#25badf] ring-2 ring-[#25badf]/20" : "border-gray-200"
-                  }`}
+                  className="card-hover bg-white p-8 rounded-lg border-2 border-[#25badf]/20 hover:border-[#25badf]/40 transition-all shadow-sm"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                    <div className="p-7">
+                    <div className="p-5 bg-gradient-to-br from-[#25badf]/10 to-[#0fa3c1]/10 rounded-lg">
                       <div className="text-[#25badf] font-bold text-lg">{seminar.date || "Date TBD"}</div>
                       <p className="text-slate-600 text-sm">{seminar.time || "Time TBD"}</p>
                     </div>
@@ -291,7 +305,7 @@ export default function Seminars() {
                     <div className="md:col-span-2">
                       <h3 className="heading-sm text-[#1b2e45] mb-2">{seminar.title}</h3>
                       <p className="text-slate-600 flex items-center gap-2">
-                        <Calendar size={16} />
+                        <Calendar size={16} className="text-[#25badf]" />
                         {seminar.location || "Location TBD"}
                       </p>
                     </div>
@@ -311,8 +325,8 @@ export default function Seminars() {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600">
-              No upcoming seminars yet. Add events with type <span className="font-semibold">Upcoming</span> in the admin dashboard.
+            <div className="rounded-lg border-2 border-dashed border-[#25badf]/30 bg-[#25badf]/5 p-8 text-center text-slate-600">
+              No upcoming seminars yet. Add events with type <span className="font-semibold text-[#25badf]">Upcoming</span> in the admin dashboard.
             </div>
           )}
         </div>
