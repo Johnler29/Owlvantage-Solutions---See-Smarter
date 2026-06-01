@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Lightbulb, Crown, Compass, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Lightbulb, Crown, Compass, ArrowRight, Sparkles, CheckCircle2, Target, Eye } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -111,75 +111,91 @@ export default function About() {
         </section>
 
         {/* Mission & Vision */}
-        <section className="py-20 lg:py-32 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Mission */}
-            <ScrollReveal as="div" variant="pop" className="card-hover bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-              <h3 className="heading-md mb-4 text-[#1b2e45]">Our Mission</h3>
-              <p className="text-slate-700 leading-relaxed text-lg">
-                To provide cutting-edge learning solutions and IT services that inspire growth, enhance skills, and
-                drive organizational success.
+        <section className="py-20 lg:py-32 bg-gradient-to-br from-[#25badf]/5 via-white to-[#1b2e45]/5 relative overflow-hidden">
+          <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-[#25badf]/10 blur-3xl" />
+          <div className="absolute -bottom-16 left-10 h-64 w-64 rounded-full bg-[#1b2e45]/10 blur-3xl" />
+          <div className="container mx-auto px-4 relative z-10">
+            <ScrollReveal as="div" variant="fade-up" className="text-center mb-16">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-[#25badf]/20 to-[#25badf]/5 px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-[#25badf]">
+                <Sparkles size={14} className="text-[#25badf]" />
+                Our Purpose
+              </p>
+              <h2 className="heading-lg mb-4">Mission & Vision</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                The driving force behind everything we do at Owlvantage Solutions.
               </p>
             </ScrollReveal>
 
-            {/* Vision */}
-            <ScrollReveal as="div" variant="pop" delay={80} className="card-hover bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-              <h3 className="heading-md mb-4 text-[#1b2e45]">Our Vision</h3>
-              <p className="text-slate-700 leading-relaxed text-lg">
-                To become a trusted partner for businesses and professionals seeking impactful learning experiences and
-                innovative IT solutions.
-              </p>
-            </ScrollReveal>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Mission */}
+              <ScrollReveal as="div" variant="pop" className="card-featured text-center">
+                <div className="flex flex-col items-center p-7">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#25badf]/20 to-[#25badf]/5 mb-6">
+                    <Target size={36} className="text-[#25badf]" />
+                  </div>
+                  <h3 className="heading-sm mb-3 text-[#1b2e45]">Our Mission</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    To provide cutting-edge learning solutions and IT services that inspire growth, enhance skills, and
+                    drive organizational success.
+                  </p>
+                </div>
+              </ScrollReveal>
+
+              {/* Vision */}
+              <ScrollReveal as="div" variant="pop" delay={80} className="card-featured text-center">
+                <div className="flex flex-col items-center p-7">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#25badf]/20 to-[#25badf]/5 mb-6">
+                    <Eye size={36} className="text-[#25badf]" />
+                  </div>
+                  <h3 className="heading-sm mb-3 text-[#1b2e45]">Our Vision</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    To become a trusted partner for businesses and professionals seeking impactful learning experiences and
+                    innovative IT solutions.
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
           </div>
-        </div>
         </section>
 
         {/* Core Values */}
-        <section className="py-20 lg:py-32 bg-white">
-        <div className="container mx-auto px-4">
-          <ScrollReveal as="div" variant="fade-up" className="text-center mb-16">
-            <h2 className="heading-lg mb-4">Our Core Values</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              These principles guide everything we do and shape how we serve our clients.
-            </p>
-          </ScrollReveal>
+        <section className="py-20 lg:py-32 bg-gradient-to-br from-[#1b2e45]/5 via-white to-[#25badf]/5 relative overflow-hidden">
+          <div className="absolute top-10 right-10 h-40 w-40 rounded-full bg-[#25badf]/10 blur-3xl" />
+          <div className="absolute bottom-10 left-10 h-32 w-32 rounded-full bg-[#1b2e45]/10 blur-3xl" />
+          <div className="container mx-auto px-4 relative z-10">
+            <ScrollReveal as="div" variant="fade-up" className="text-center mb-16">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#25badf]/10 text-[#25badf] px-4 py-1.5 text-sm font-semibold uppercase tracking-widest">
+                Our Principles
+              </p>
+              <h2 className="heading-lg mb-4">Our Core Values</h2>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                These principles guide everything we do and shape how we serve our clients.
+              </p>
+            </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {coreValues.map((value, idx) => {
-              const Icon = value.icon;
-              const card = (
-                <ScrollReveal
-                  key={idx}
-                  as="div"
-                  variant="pop"
-                  delay={idx * 80}
-                  className="card-hover overflow-hidden rounded-2xl border border-gray-200 bg-slate-50 shadow-sm"
-                >
-                  <div className="flex items-start gap-4 p-7">
-                    <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-[#25badf]/15">
-                      <Icon className="w-6 h-6 text-[#25badf]" />
-                    </div>
-                    <div>
-                      <h3 className="heading-sm mb-2 text-[#1b2e45]">{value.title}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {coreValues.map((value, idx) => {
+                const Icon = value.icon;
+                return (
+                  <ScrollReveal
+                    key={idx}
+                    as="div"
+                    variant="pop"
+                    delay={idx * 80}
+                    className="card-featured text-center"
+                  >
+                    <div className="flex flex-col items-center p-7">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#25badf]/20 to-[#25badf]/5 mb-6">
+                        <Icon size={36} className="text-[#25badf]" />
+                      </div>
+                      <h3 className="heading-sm mb-3 text-[#1b2e45]">{value.title}</h3>
                       <p className="text-slate-600 leading-relaxed">{value.description}</p>
                     </div>
-                  </div>
-                </ScrollReveal>
-              );
-
-              if (idx === 2) {
-                return (
-                  <div key={value.title} className="lg:col-span-2 flex justify-center">
-                    <div className="w-full lg:max-w-[calc(50%-1rem)]">{card}</div>
-                  </div>
+                  </ScrollReveal>
                 );
-              }
-
-              return card;
-            })}
+              })}
+            </div>
           </div>
-        </div>
         </section>
 
         {/* CTA Section */}

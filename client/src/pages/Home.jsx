@@ -5,6 +5,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { apiUrl } from "@/lib/api";
+import { EventCardSkeleton } from "@/components/ui/card-skeleton";
+import { SeminarListSkeleton } from "@/components/ui/card-skeleton";
 
 /**
  * Home Page
@@ -18,6 +20,7 @@ import { apiUrl } from "@/lib/api";
 export default function Home() {
   const [featuredPrograms, setFeaturedPrograms] = useState([]);
   const [upcomingSeminars, setUpcomingSeminars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const services = [
     {
@@ -46,6 +49,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      setIsLoading(true);
       try {
         const res = await fetch(apiUrl("/api/events"));
         if (!res.ok) {
@@ -60,6 +64,8 @@ export default function Home() {
         console.error("Failed to fetch events", error);
         setFeaturedPrograms([]);
         setUpcomingSeminars([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -121,7 +127,13 @@ export default function Home() {
             </p>
           </ScrollReveal>
 
-          {upcomingSeminars.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <EventCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : upcomingSeminars.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {upcomingSeminars.map((seminar, idx) => (
                 <ScrollReveal
@@ -129,12 +141,12 @@ export default function Home() {
                   as="div"
                   variant="pop"
                   delay={idx * 80}
-                  className="card-hover rounded-2xl border-2 border-[#25badf]/20 bg-white shadow-sm hover:border-[#25badf]/40"
+                  className="card-featured"
                 >
                   <div className="p-7">
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <h3 className="text-xl font-bold text-[#1b2e45] leading-tight">{seminar.title}</h3>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#25badf]/10 text-[#25badf] px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
+                      <span className="badge-teal">
                         <Sparkles size={12} />
                         New
                       </span>
@@ -143,22 +155,22 @@ export default function Home() {
                       {seminar.description || "No description provided yet."}
                     </p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-teal">
                         <CalendarDays size={14} className="shrink-0" />
                         {seminar.date || "Date TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#1b2e45]/10 text-[#1b2e45] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-navy">
                         <Clock3 size={14} className="shrink-0" />
                         {seminar.time || "Time TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-teal">
                         <MapPin size={14} className="shrink-0" />
                         {seminar.location || "Location TBD"}
                       </span>
                     </div>
                     <div className="mt-6">
                       <Link href="/seminars">
-                        <span className="text-[#25badf] font-semibold hover:underline inline-flex items-center gap-2">
+                        <span className="link-teal">
                           Learn More <ArrowRight size={18} />
                         </span>
                       </Link>
@@ -199,7 +211,13 @@ export default function Home() {
             </p>
           </ScrollReveal>
 
-          {featuredPrograms.length > 0 ? (
+          {isLoading ? (
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {Array.from({ length: 2 }).map((_, idx) => (
+                <EventCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : featuredPrograms.length > 0 ? (
             <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               {featuredPrograms.map((program, idx) => (
                 <ScrollReveal
@@ -207,12 +225,12 @@ export default function Home() {
                   as="div"
                   variant="pop"
                   delay={idx * 80}
-                  className="card-hover rounded-2xl border-2 border-[#1b2e45]/20 bg-white shadow-sm hover:border-[#1b2e45]/40"
+                  className="card-featured"
                 >
                   <div className="p-7">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="heading-sm text-[#1b2e45]">{program.title}</h3>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1b2e45]/10 text-[#1b2e45] px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
+                      <span className="badge-navy">
                         <Sparkles size={12} />
                         Featured
                       </span>
@@ -221,30 +239,30 @@ export default function Home() {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600 mb-6">
                       {program.type === "featured" ? (
                         <>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-teal">
                             <Clock3 size={15} className="shrink-0" />
                             {program.duration || "Duration TBD"}
                           </span>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#1b2e45]/10 text-[#1b2e45] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-navy">
                             <GraduationCap size={15} className="shrink-0" />
                             {program.level || "Level TBD"}
                           </span>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-teal">
                             <MapPin size={15} className="shrink-0" />
                             {program.location || "Location TBD"}
                           </span>
                         </>
                       ) : (
                         <>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-teal">
                             <Calendar size={15} className="shrink-0" />
                             {program.date || "Date TBD"}
                           </span>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#1b2e45]/10 text-[#1b2e45] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-navy">
                             <Clock3 size={15} className="shrink-0" />
                             {program.time || "Time TBD"}
                           </span>
-                          <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3 py-1.5 rounded-full font-semibold">
+                          <span className="badge-teal">
                             <MapPin size={15} className="shrink-0" />
                             {program.location || "Location TBD"}
                           </span>
@@ -252,7 +270,7 @@ export default function Home() {
                       )}
                     </div>
                     <Link href="/seminars">
-                      <span className="text-[#25badf] font-semibold hover:underline inline-flex items-center gap-2">
+                      <span className="link-teal">
                         Learn More <ArrowRight size={18} />
                       </span>
                     </Link>

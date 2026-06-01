@@ -6,6 +6,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import { apiUrl } from "@/lib/api";
+import { EventCardSkeleton } from "@/components/ui/card-skeleton";
+import { SeminarListSkeleton } from "@/components/ui/card-skeleton";
+import { ModalFormSkeleton } from "@/components/ui/form-skeleton";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +36,7 @@ export default function Seminars() {
 
   const [featuredPrograms, setFeaturedPrograms] = useState([]);
   const [upcomingSeminars, setUpcomingSeminars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedSeminarId, setSelectedSeminarId] = useState(null);
   const [selectedSeminar, setSelectedSeminar] = useState(null);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
@@ -56,6 +60,7 @@ export default function Seminars() {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      setIsLoading(true);
       try {
         const res = await fetch(apiUrl("/api/events"));
         if (!res.ok) {
@@ -71,6 +76,8 @@ export default function Seminars() {
         console.error("Failed to fetch events", err);
         setFeaturedPrograms([]);
         setUpcomingSeminars([]);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchEvents();
@@ -210,7 +217,13 @@ export default function Seminars() {
             </p>
           </ScrollReveal>
 
-          {featuredPrograms.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {Array.from({ length: 2 }).map((_, idx) => (
+                <EventCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : featuredPrograms.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {featuredPrograms.map((program, idx) => (
                 <ScrollReveal
@@ -218,12 +231,12 @@ export default function Seminars() {
                   as="div"
                   variant="pop"
                   delay={idx * 80}
-                  className="card-hover rounded-2xl border-2 border-[#1b2e45]/20 bg-white shadow-sm hover:border-[#1b2e45]/40"
+                  className="card-featured"
                 >
                   <div className="p-7">
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <h3 className="text-2xl font-bold text-[#1b2e45] leading-tight">{program.title}</h3>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1b2e45]/10 text-[#1b2e45] px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
+                      <span className="badge-navy">
                         <Sparkles size={12} />
                         Featured
                       </span>
@@ -234,15 +247,15 @@ export default function Seminars() {
                     </p>
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-teal">
                         <Clock3 size={14} className="shrink-0" />
                         {program.duration || "Duration TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#1b2e45]/10 text-[#1b2e45] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-navy">
                         <Sparkles size={14} className="shrink-0" />
                         {program.level || "Level TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-2 whitespace-nowrap bg-[#25badf]/10 text-[#25badf] px-3.5 py-1.5 rounded-full font-semibold">
+                      <span className="badge-teal">
                         <MapPin size={14} className="shrink-0" />
                         {program.location || "Location TBD"}
                       </span>
@@ -286,7 +299,13 @@ export default function Seminars() {
             </p>
           </ScrollReveal>
 
-          {upcomingSeminars.length > 0 ? (
+          {isLoading ? (
+            <div className="space-y-6">
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <SeminarListSkeleton key={idx} />
+              ))}
+            </div>
+          ) : upcomingSeminars.length > 0 ? (
             <div className="space-y-6">
               {upcomingSeminars.map((seminar, idx) => (
                 <ScrollReveal
@@ -405,8 +424,11 @@ export default function Seminars() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmitRegistration} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {isSubmitting ? (
+            <ModalFormSkeleton />
+          ) : (
+            <form onSubmit={handleSubmitRegistration} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <label htmlFor="modal-name" className="mb-1 block text-sm font-semibold text-[#1b2e45]">
                   Name *
@@ -416,7 +438,7 @@ export default function Seminars() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#25badf] focus:outline-none focus:ring-2 focus:ring-[#25badf]/20"
+                  className="input-base"
                   placeholder="Your name"
                   required
                 />
@@ -431,7 +453,7 @@ export default function Seminars() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#25badf] focus:outline-none focus:ring-2 focus:ring-[#25badf]/20"
+                  className="input-base"
                   placeholder="you@email.com"
                   required
                 />
@@ -445,7 +467,7 @@ export default function Seminars() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#25badf] focus:outline-none focus:ring-2 focus:ring-[#25badf]/20"
+                  className="input-base"
                   placeholder="Your phone number"
                 />
               </div>
@@ -458,7 +480,7 @@ export default function Seminars() {
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#25badf] focus:outline-none focus:ring-2 focus:ring-[#25badf]/20"
+                  className="input-base"
                   placeholder="Your company"
                 />
               </div>
@@ -474,7 +496,7 @@ export default function Seminars() {
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-[#25badf] focus:outline-none focus:ring-2 focus:ring-[#25badf]/20"
+                className="input-base resize-none"
                 placeholder="Any notes for the organizer (optional)..."
               />
             </div>
@@ -487,6 +509,7 @@ export default function Seminars() {
               {isSubmitting ? "Submitting..." : "Register for Seminar"}
             </button>
           </form>
+          )}
         </DialogContent>
       </Dialog>
 

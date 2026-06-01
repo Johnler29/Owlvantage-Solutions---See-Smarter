@@ -49,6 +49,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { apiUrl } from "@/lib/api";
+import { StatsGridSkeleton } from "@/components/ui/stats-skeleton";
+import { DataTableSkeleton } from "@/components/ui/table-skeleton";
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,6 +59,8 @@ export default function Admin() {
   const [events, setEvents] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const [inquiries, setInquiries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSeminarFilter, setSelectedSeminarFilter] = useState("all");
@@ -157,7 +161,10 @@ export default function Admin() {
   };
 
   const refreshAdminData = async () => {
+    setIsLoading(true);
     await Promise.all([fetchEvents(), fetchRegistrations(), fetchInquiries()]);
+    setIsLoading(false);
+    setIsInitialLoad(false);
   };
 
   const handleLogin = async (e) => {
@@ -442,7 +449,7 @@ export default function Admin() {
     return (
       <div className="space-y-5">
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">Title</label>
+          <label className="block text-sm font-semibold text-slate-700">Title</label>
           <input
             type="text"
             value={data.title}
@@ -451,11 +458,11 @@ export default function Admin() {
             placeholder="Event title"
             required
           />
-          {errors.title && <p className="text-xs text-red-600">{errors.title}</p>}
+          {errors.title && <p className="text-xs text-red-600 font-medium">{errors.title}</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">Type</label>
+          <label className="block text-sm font-semibold text-slate-700">Type</label>
           <select
             value={data.type}
             onChange={(e) => {
@@ -485,11 +492,11 @@ export default function Admin() {
         </div>
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">Description</label>
+          <label className="block text-sm font-semibold text-slate-700">Description</label>
           <textarea
             value={data.description}
             onChange={(e) => setData({ ...data, description: e.target.value })}
-            className={baseFieldClass}
+            className={`${baseFieldClass} resize-none`}
             rows={4}
             placeholder="Short description (optional)"
           />
@@ -498,7 +505,7 @@ export default function Admin() {
         {data.type === "upcoming" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">Date</label>
+              <label className="block text-sm font-semibold text-slate-700">Date</label>
               <input
                 type="text"
                 value={data.date}
@@ -506,11 +513,11 @@ export default function Admin() {
                 className={errors.date ? errorFieldClass : baseFieldClass}
                 placeholder="e.g. July 15"
               />
-              {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
+              {errors.date && <p className="text-xs text-red-600 font-medium">{errors.date}</p>}
             </div>
 
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">Time</label>
+              <label className="block text-sm font-semibold text-slate-700">Time</label>
               <input
                 type="text"
                 value={data.time}
@@ -518,13 +525,13 @@ export default function Admin() {
                 className={errors.time ? errorFieldClass : baseFieldClass}
                 placeholder="e.g. 9:00 AM - 5:00 PM"
               />
-              {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+              {errors.time && <p className="text-xs text-red-600 font-medium">{errors.time}</p>}
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">Duration</label>
+              <label className="block text-sm font-semibold text-slate-700">Duration</label>
               <input
                 type="text"
                 value={data.duration}
@@ -532,11 +539,11 @@ export default function Admin() {
                 className={errors.duration ? errorFieldClass : baseFieldClass}
                 placeholder="e.g. 2 days"
               />
-              {errors.duration && <p className="text-xs text-red-600">{errors.duration}</p>}
+              {errors.duration && <p className="text-xs text-red-600 font-medium">{errors.duration}</p>}
             </div>
 
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">Level</label>
+              <label className="block text-sm font-semibold text-slate-700">Level</label>
               <input
                 type="text"
                 value={data.level}
@@ -544,13 +551,13 @@ export default function Admin() {
                 className={errors.level ? errorFieldClass : baseFieldClass}
                 placeholder="e.g. Beginner"
               />
-              {errors.level && <p className="text-xs text-red-600">{errors.level}</p>}
+              {errors.level && <p className="text-xs text-red-600 font-medium">{errors.level}</p>}
             </div>
           </div>
         )}
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">Location</label>
+          <label className="block text-sm font-semibold text-slate-700">Location</label>
           <input
             type="text"
             value={data.location}
@@ -595,83 +602,86 @@ export default function Admin() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="border-b border-gray-100 bg-gray-50">
-                <tr>
-                  <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    <span className="inline-flex items-center gap-1.5"><UserRound size={13} /> Registrant</span>
-                  </th>
-                  <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    <span className="inline-flex items-center gap-1.5"><Calendar size={13} /> Seminar</span>
-                  </th>
-                  <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    <span className="inline-flex items-center gap-1.5"><Clock size={13} /> Registered At</span>
-                  </th>
-                  <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRegistrations.map((registration, index) => (
-                  <tr
-                    key={registration.id}
-                    className={index % 2 === 0 ? "border-b border-gray-100 bg-white transition-all duration-200 hover:bg-gray-50" : "border-b border-gray-100 bg-gray-50/50 transition-all duration-200 hover:bg-gray-50"}
-                  >
-                    <td className="px-5 py-4">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <div className="truncate text-sm font-semibold text-slate-900">{registration.name}</div>
-                          <span
-                            className={
-                              isRegistrationApproved(registration)
-                                ? "shrink-0 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700"
-                                : "shrink-0 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800"
-                            }
-                          >
+            {isInitialLoad ? (
+              <TableSkeleton rows={5} columns={4} />
+            ) : (
+              <table className="table-base">
+                <thead>
+                  <tr>
+                    <th className="table-head">
+                      <span className="inline-flex items-center gap-1.5"><UserRound size={13} /> Registrant</span>
+                    </th>
+                    <th className="table-head">
+                      <span className="inline-flex items-center gap-1.5"><Calendar size={13} /> Seminar</span>
+                    </th>
+                    <th className="table-head">
+                      <span className="inline-flex items-center gap-1.5"><Clock size={13} /> Registered At</span>
+                    </th>
+                    <th className="table-head text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRegistrations.map((registration, index) => (
+                    <tr
+                      key={registration.id}
+                      className={index % 2 === 0 ? "table-row-hover" : "table-row-hover bg-slate-50/30"}
+                    >
+                      <td className="table-cell">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <div className="truncate text-sm font-semibold text-slate-900">{registration.name}</div>
                             <span
                               className={
                                 isRegistrationApproved(registration)
-                                  ? "h-1.5 w-1.5 rounded-full bg-emerald-500"
-                                  : "h-1.5 w-1.5 rounded-full bg-amber-500"
+                                  ? "badge-success"
+                                  : "badge-warning"
                               }
-                            />
-                            {isRegistrationApproved(registration) ? "Approved" : "Pending"}
-                          </span>
+                            >
+                              <span
+                                className={
+                                  isRegistrationApproved(registration)
+                                    ? "h-1.5 w-1.5 rounded-full bg-emerald-500"
+                                    : "h-1.5 w-1.5 rounded-full bg-amber-500"
+                                }
+                              />
+                              {isRegistrationApproved(registration) ? "Approved" : "Pending"}
+                            </span>
+                          </div>
+                          <div className="mt-1 truncate text-xs text-slate-500">{registration.email}</div>
                         </div>
-                        <div className="mt-1 truncate text-xs text-slate-500">{registration.email}</div>
-                      </div>
-                      {(registration.phone || registration.company) && (
-                        <div className="mt-1 text-xs text-slate-500">
-                          {[registration.phone, registration.company].filter(Boolean).join(" • ")}
+                        {(registration.phone || registration.company) && (
+                          <div className="mt-1 text-xs text-slate-500">
+                            {[registration.phone, registration.company].filter(Boolean).join(" • ")}
+                          </div>
+                        )}
+                      </td>
+                      <td className="table-cell">
+                        <div className="text-sm font-medium text-slate-900">{registration.seminar_title}</div>
+                        {(registration.seminar_date || registration.seminar_time) && (
+                          <div className="mt-1 text-xs text-slate-500">
+                            {[registration.seminar_date, registration.seminar_time].filter(Boolean).join(" • ")}
+                          </div>
+                        )}
+                      </td>
+                      <td className="table-cell text-sm text-slate-600">{formatRegistrationDate(registration.created_at)}</td>
+                      <td className="table-cell text-right">
+                        <div className="inline-flex items-center gap-2">
+                          <button
+                            onClick={() => setViewRegistrationTarget(registration)}
+                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 focus-ring-teal"
+                          >
+                            <Eye size={16} /> View
+                          </button>
+                          <button
+                            onClick={() => setDeleteRegistrationTarget(registration)}
+                            className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-50 hover:-translate-y-0.5 focus-ring-teal"
+                          >
+                            <Trash2 size={16} /> Delete
+                          </button>
                         </div>
-                      )}
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="text-sm font-medium text-slate-900">{registration.seminar_title}</div>
-                      {(registration.seminar_date || registration.seminar_time) && (
-                        <div className="mt-1 text-xs text-slate-500">
-                          {[registration.seminar_date, registration.seminar_time].filter(Boolean).join(" • ")}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-5 py-4 text-sm text-slate-600">{formatRegistrationDate(registration.created_at)}</td>
-                    <td className="px-5 py-4 text-right">
-                      <div className="inline-flex items-center gap-2">
-                        <button
-                          onClick={() => setViewRegistrationTarget(registration)}
-                          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition duration-200 hover:border-slate-300 hover:bg-slate-100"
-                        >
-                          <Eye size={16} /> View
-                        </button>
-                        <button
-                          onClick={() => setDeleteRegistrationTarget(registration)}
-                          className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-600 transition duration-200 hover:bg-red-50"
-                        >
-                          <Trash2 size={16} /> Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  ))}
 
                 {filteredRegistrations.length === 0 && (
                   <tr>
@@ -693,6 +703,7 @@ export default function Admin() {
                 )}
               </tbody>
             </table>
+            )}
           </div>
         </section>
       </div>
@@ -700,6 +711,10 @@ export default function Admin() {
   };
 
   const renderStatsCards = () => {
+    if (isInitialLoad) {
+      return <StatsGridSkeleton />;
+    }
+
     const cards = [
       {
         label: "Total Registrations",
@@ -811,58 +826,64 @@ export default function Admin() {
                 <p className="text-sm text-gray-500">Latest events created</p>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="border-b border-gray-100 bg-gray-50">
-                  <tr>
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                      <span className="inline-flex items-center gap-1.5"><CalendarDays size={13} /> Title</span>
-                    </th>
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Status</th>
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                      <span className="inline-flex items-center gap-1.5"><Users size={13} /> Registrations</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.slice(0, 5).map((event, index) => (
-                    <tr
-                      key={event.id}
-                      className={index % 2 === 0 ? "border-b border-gray-100 bg-white transition-all duration-200 hover:bg-gray-50" : "border-b border-gray-100 bg-gray-50/50 transition-all duration-200 hover:bg-gray-50"}
-                    >
-                      <td className="px-5 py-4">
-                        <div className="text-sm font-semibold text-gray-900">{event.title}</div>
-                      </td>
-                      <td className="px-5 py-4">
-                        <Badge
-                          variant="outline"
-                          className={`rounded-full px-3 py-1 text-xs font-medium ${typeBadgeClassName(event.type)}`}
-                        >
-                          {normalizeTypeForUi(event.type)}
-                        </Badge>
-                      </td>
-                      <td className="px-5 py-4 text-sm font-semibold text-slate-800">{Number(event.registration_count || 0)}</td>
-                    </tr>
-                  ))}
-                  {events.length === 0 && (
+            {isInitialLoad ? (
+              <div className="p-5">
+                <TableSkeleton rows={5} columns={3} />
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="table-base">
+                  <thead>
                     <tr>
-                      <td colSpan={3} className="px-5 py-10">
-                        <Empty className="border-0 p-0 text-slate-500">
-                          <EmptyHeader>
-                            <EmptyMedia variant="icon">
-                              <Inbox />
-                            </EmptyMedia>
-                            <EmptyTitle>No events yet</EmptyTitle>
-                            <EmptyDescription>Create one in the Events section.</EmptyDescription>
-                          </EmptyHeader>
-                          <EmptyContent />
-                        </Empty>
-                      </td>
+                      <th className="table-head">
+                        <span className="inline-flex items-center gap-1.5"><CalendarDays size={13} /> Title</span>
+                      </th>
+                      <th className="table-head">Status</th>
+                      <th className="table-head">
+                        <span className="inline-flex items-center gap-1.5"><Users size={13} /> Registrations</span>
+                      </th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {events.slice(0, 5).map((event, index) => (
+                      <tr
+                        key={event.id}
+                        className={index % 2 === 0 ? "table-row-hover" : "table-row-hover bg-slate-50/30"}
+                      >
+                        <td className="table-cell">
+                          <div className="text-sm font-semibold text-gray-900">{event.title}</div>
+                        </td>
+                        <td className="table-cell">
+                          <Badge
+                            variant="outline"
+                            className={`rounded-full px-3 py-1 text-xs font-medium ${typeBadgeClassName(event.type)}`}
+                          >
+                            {normalizeTypeForUi(event.type)}
+                          </Badge>
+                        </td>
+                        <td className="table-cell text-sm font-semibold text-slate-800">{Number(event.registration_count || 0)}</td>
+                      </tr>
+                    ))}
+                    {events.length === 0 && (
+                      <tr>
+                        <td colSpan={3} className="px-5 py-10">
+                          <Empty className="border-0 p-0 text-slate-500">
+                            <EmptyHeader>
+                              <EmptyMedia variant="icon">
+                                <Inbox />
+                              </EmptyMedia>
+                              <EmptyTitle>No events yet</EmptyTitle>
+                              <EmptyDescription>Create one in the Events section.</EmptyDescription>
+                            </EmptyHeader>
+                            <EmptyContent />
+                          </Empty>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
 
           <section className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -871,34 +892,45 @@ export default function Admin() {
               <p className="text-sm text-slate-500">Latest user and inquiry activity</p>
             </div>
 
-            <div className="space-y-3">
-              {registrations.slice(0, 3).map((registration) => (
-                <div key={`reg-${registration.id}`} className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
-                  <p className="text-sm font-medium text-slate-900">{registration.name}</p>
-                  <p className="text-xs text-slate-500">Registered for {registration.seminar_title}</p>
-                </div>
-              ))}
+            {isInitialLoad ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
+                    <div className="h-4 w-32 rounded-md bg-muted animate-shimmer mb-2" />
+                    <div className="h-3 w-48 rounded-md bg-muted animate-shimmer" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {registrations.slice(0, 3).map((registration) => (
+                  <div key={`reg-${registration.id}`} className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
+                    <p className="text-sm font-medium text-slate-900">{registration.name}</p>
+                    <p className="text-xs text-slate-500">Registered for {registration.seminar_title}</p>
+                  </div>
+                ))}
 
-              {inquiries.slice(0, 2).map((inquiry) => (
-                <div key={`inq-${inquiry.id}`} className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
-                  <p className="text-sm font-medium text-slate-900">{inquiry.name}</p>
-                  <p className="text-xs text-slate-500">Sent an inquiry</p>
-                </div>
-              ))}
+                {inquiries.slice(0, 2).map((inquiry) => (
+                  <div key={`inq-${inquiry.id}`} className="rounded-lg border border-slate-100 bg-slate-50/70 p-3">
+                    <p className="text-sm font-medium text-slate-900">{inquiry.name}</p>
+                    <p className="text-xs text-slate-500">Sent an inquiry</p>
+                  </div>
+                ))}
 
-              {registrations.length === 0 && inquiries.length === 0 && (
-                <Empty className="border border-dashed border-slate-200 bg-slate-50/60 p-4 text-slate-500">
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                      <Activity />
-                    </EmptyMedia>
-                    <EmptyTitle>No activity yet</EmptyTitle>
-                    <EmptyDescription>Activity will appear here once users interact with your site.</EmptyDescription>
-                  </EmptyHeader>
-                  <EmptyContent />
-                </Empty>
-              )}
-            </div>
+                {registrations.length === 0 && inquiries.length === 0 && (
+                  <Empty className="border border-dashed border-slate-200 bg-slate-50/60 p-4 text-slate-500">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <Activity />
+                      </EmptyMedia>
+                      <EmptyTitle>No activity yet</EmptyTitle>
+                      <EmptyDescription>Activity will appear here once users interact with your site.</EmptyDescription>
+                    </EmptyHeader>
+                    <EmptyContent />
+                  </Empty>
+                )}
+              </div>
+            )}
           </section>
         </div>
       </div>

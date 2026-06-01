@@ -186,15 +186,15 @@
 
   /* Owlvantage Design System */
   .btn-primary {
-    @apply bg-[#25badf] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#1a8fb8] hover:shadow-xl hover:-translate-y-0.5;
+    @apply bg-[#25badf] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#1a8fb8] hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:ring-offset-2 active:scale-95;
   }
 
   .btn-secondary {
-    @apply bg-[#1b2e45] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#0f1a2e] hover:shadow-xl hover:-translate-y-0.5;
+    @apply bg-[#1b2e45] text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#0f1a2e] hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#1b2e45] focus:ring-offset-2 active:scale-95;
   }
 
   .btn-outline {
-    @apply border-2 border-[#25badf] text-[#25badf] px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#25badf] hover:text-white hover:-translate-y-0.5;
+    @apply border-2 border-[#25badf] text-[#25badf] px-6 py-3 rounded-md font-semibold transition-all duration-300 hover:bg-[#25badf] hover:text-white hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:ring-offset-2 active:scale-95;
   }
 
   .heading-xl {
@@ -235,6 +235,103 @@
 
   .card-hover {
     @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 hover:border-[#25badf]/30;
+  }
+
+  /* Enhanced Form Inputs */
+  .input-base {
+    @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 transition-all duration-200 focus:border-[#25badf] focus:ring-2 focus:ring-[#25badf]/20 focus:outline-none placeholder:text-slate-400;
+  }
+
+  .input-error {
+    @apply border-red-300 focus:border-red-500 focus:ring-red-500/20;
+  }
+
+  /* Enhanced Cards */
+  .card-elevated {
+    @apply rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .card-featured {
+    @apply rounded-2xl border-2 border-[#25badf]/20 bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:border-[#25badf]/40 hover:-translate-y-1;
+  }
+
+  /* Enhanced Badges */
+  .badge-teal {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-[#25badf]/10 px-3 py-1 text-xs font-semibold text-[#25badf] border border-[#25badf]/20;
+  }
+
+  .badge-navy {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-[#1b2e45]/10 px-3 py-1 text-xs font-semibold text-[#1b2e45] border border-[#1b2e45]/20;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200;
+  }
+
+  .badge-warning {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 border border-amber-200;
+  }
+
+  /* Enhanced Section Spacing */
+  .section-padding {
+    @apply py-20 md:py-32;
+  }
+
+  /* Enhanced Text Hierarchy */
+  .text-lead {
+    @apply text-lg text-slate-600 leading-relaxed;
+  }
+
+  .text-muted {
+    @apply text-slate-500;
+  }
+
+  /* Enhanced Links */
+  .link-teal {
+    @apply text-[#25badf] font-semibold hover:text-[#1a8fb8] transition-colors duration-200 inline-flex items-center gap-1;
+  }
+
+  /* Enhanced Table Styles */
+  .table-base {
+    @apply w-full text-sm text-left;
+  }
+
+  .table-head {
+    @apply px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500 bg-slate-50 border-b border-slate-200;
+  }
+
+  .table-cell {
+    @apply px-5 py-4 border-b border-slate-100 text-slate-900;
+  }
+
+  .table-row-hover {
+    @apply transition-colors duration-150 hover:bg-slate-50;
+  }
+
+  /* Enhanced Alert Styles */
+  .alert-info {
+    @apply rounded-lg border border-[#25badf]/20 bg-[#25badf]/5 p-4 text-slate-700;
+  }
+
+  .alert-success {
+    @apply rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-emerald-800;
+  }
+
+  .alert-warning {
+    @apply rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-800;
+  }
+
+  .alert-error {
+    @apply rounded-lg border border-red-200 bg-red-50 p-4 text-red-800;
+  }
+
+  /* Enhanced Focus Visible for Accessibility */
+  .focus-ring-teal {
+    @apply focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:ring-offset-2;
+  }
+
+  .focus-ring-navy {
+    @apply focus:outline-none focus:ring-2 focus:ring-[#1b2e45] focus:ring-offset-2;
   }
 }
 
@@ -287,4 +384,21 @@
     transform: none;
     transition: none;
   }
+  .animate-shimmer {
+    animation: none;
+  }
+}
+
+/* Shimmer Animation for Skeleton Loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
 }

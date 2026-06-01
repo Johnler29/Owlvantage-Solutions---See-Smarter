@@ -26,11 +26,11 @@ export default function Navigation() {
   const isActive = (href) => normalizePath(href) === currentPath;
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/">
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center gap-2 cursor-pointer focus-ring-teal rounded-lg">
             <img
               src="/logo.png"
               alt="Owlvantage - See Smarter"
@@ -51,8 +51,8 @@ export default function Navigation() {
               <span
                 className={
                   isActive(link.href)
-                    ? "text-[#25badf] font-semibold text-sm lg:text-base whitespace-nowrap transition-colors duration-200 border-b-2 border-[#25badf] pb-1"
-                    : "text-gray-700 font-medium text-sm lg:text-base whitespace-nowrap hover:text-[#25badf] transition-colors duration-200"
+                    ? "text-[#25badf] font-semibold text-sm lg:text-base whitespace-nowrap transition-all duration-200 border-b-2 border-[#25badf] pb-1 focus-ring-teal rounded"
+                    : "text-gray-700 font-medium text-sm lg:text-base whitespace-nowrap hover:text-[#25badf] transition-all duration-200 focus-ring-teal rounded"
                 }
               >
                 {link.label}
@@ -69,7 +69,8 @@ export default function Navigation() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 text-gray-700 hover:text-[#25badf] transition-colors"
+          className="md:hidden p-2 text-gray-700 hover:text-[#25badf] transition-colors rounded-lg focus-ring-teal"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -77,15 +78,15 @@ export default function Navigation() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 py-4">
+        <div className="md:hidden bg-white/95 backdrop-blur-sm border-t border-gray-200 py-4 animate-in slide-in-from-top-2 duration-200">
           <div className="container mx-auto px-4 flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <span
                   className={
                     isActive(link.href)
-                      ? "text-[#25badf] font-semibold transition-colors block"
-                      : "text-gray-700 font-medium hover:text-[#25badf] transition-colors block"
+                      ? "text-[#25badf] font-semibold transition-colors block py-2 px-3 rounded-lg bg-[#25badf]/5"
+                      : "text-gray-700 font-medium hover:text-[#25badf] hover:bg-slate-50 transition-colors block py-2 px-3 rounded-lg"
                   }
                   onClick={() => setIsOpen(false)}
                 >

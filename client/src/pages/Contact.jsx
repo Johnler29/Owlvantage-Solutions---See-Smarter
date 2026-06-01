@@ -232,7 +232,7 @@ export default function Contact() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:border-transparent transition-all"
+                      className="input-base"
                       placeholder="Your name"
                       required
                     />
@@ -249,7 +249,7 @@ export default function Contact() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:border-transparent transition-all"
+                      className="input-base"
                       placeholder="your@email.com"
                       required
                     />
@@ -268,7 +268,7 @@ export default function Contact() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:border-transparent transition-all"
+                      className="input-base"
                       placeholder="Your phone number"
                     />
                   </div>
@@ -284,7 +284,7 @@ export default function Contact() {
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:border-transparent transition-all"
+                      className="input-base"
                       placeholder="Your company"
                     />
                   </div>
@@ -301,7 +301,7 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#25badf] focus:border-transparent transition-all resize-none"
+                    className="input-base resize-none"
                     placeholder="Tell us about your needs..."
                     required
                   ></textarea>
